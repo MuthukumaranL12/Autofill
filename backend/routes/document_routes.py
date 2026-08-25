@@ -53,7 +53,9 @@ async def extract_document(
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail="Document extraction or persistence failed") from exc
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
     finally:
         if temp_path.exists():
             temp_path.unlink(missing_ok=True)

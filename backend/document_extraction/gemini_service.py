@@ -113,9 +113,17 @@ personal_number.
 For driving_licence extract only: full_name, date_of_birth, gender,
 driving_licence_number, address, date_of_issue, validity_from, validity_to,
 issuing_authority, vehicle_classes, blood_group, father_or_husband_name.
-For voter_id extract only: full_name, relative_name, relationship_type,
-date_of_birth, age, gender, epic_number, address, constituency, polling_station,
+For voter_id, extract only these fields:
+full_name, relative_name, relationship_type, date_of_birth, age,
+gender, epic_number, address, constituency, polling_station,
 part_number, serial_number, issuing_authority.
+For epic_number:
+- Carefully inspect the entire voter ID image for the EPIC/Voter ID number.
+- Extract the exact alphanumeric value as printed on the card.
+- Do not return null if the EPIC number is clearly visible anywhere on the document.
+- Preserve the characters exactly as printed.
+- Do not confuse the EPIC number with part number, serial number, Aadhaar number, or other numbers.
+- Return null only when the EPIC number is genuinely absent, unreadable, or not visible.
 For birth_certificate extract only: child_full_name, date_of_birth, time_of_birth,
 gender, place_of_birth, father_name, mother_name, father_nationality,
 mother_nationality, father_address, mother_address, registration_number,

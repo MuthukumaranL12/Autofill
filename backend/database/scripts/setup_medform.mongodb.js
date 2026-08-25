@@ -27,9 +27,11 @@ print('[2/6] Applying DPDP & UIDAI Compliant JSON Schema Validators...');
 // 1. USERS
 createValidatedCollection('users', {
   bsonType: 'object',
-  required: ['password_hash', 'role', 'consent_given', 'consent_timestamp', 'is_active', 'created_at', 'updated_at'],
+  required: ['password_hash', 'phone_hash' , 'role', 'consent_given', 'consent_timestamp', 'is_active', 'created_at', 'updated_at'],
   properties: {
     _id: { bsonType: 'objectId' },
+    phone_hash: { bsonType: 'string', description: 'Deterministic HMAC/SHA256 for fast unique login lookup' },
+    phone_enc: { bsonType: ['binData', 'null'], description: 'Reversible AES-256 for display/OTP verification' },
     email_hash: { bsonType: 'string' },
     email_enc: { bsonType: 'binData' },
     password_hash: { bsonType: 'string' },
@@ -76,6 +78,14 @@ createValidatedCollection('patient_profiles', {
     guardian_name_enc: { bsonType: ['binData', 'null'], description: "Father/Husband/Relative/Mother/Spouse name" },
     place_of_birth_enc: { bsonType: ['binData', 'null'] },
     insurance_details_enc: { bsonType: ['binData', 'null'], description: "Encrypted JSON payload of health policy details" },
+
+    aadhaar_enc: { bsonType: ['binData', 'null'], description: 'Reversible AES-256 Aadhaar for PDF overlay' },
+    pan_enc: { bsonType: ['binData', 'null'], description: 'Reversible AES-256 PAN for PDF overlay' },
+    driving_licence_enc: { bsonType: ['binData', 'null'], description: 'Reversible AES-256 DL for PDF overlay' },
+    voter_id_enc: { bsonType: ['binData', 'null'], description: 'Reversible AES-256 Voter ID for PDF overlay' },
+    passport_enc: { bsonType: ['binData', 'null'], description: 'Reversible AES-256 Passport for PDF overlay' },
+    birth_reg_enc: { bsonType: ['binData', 'null'], description: 'Reversible AES-256 Birth Reg for PDF overlay' },
+    health_insurance_enc: { bsonType: ['binData', 'null'], description: 'Reversible AES-256 Health Policy for PDF overlay' },
     // Non-sensitive metadata
     gender: { enum: ['MALE', 'FEMALE', 'OTHER', 'M', 'F', 'Other', 'Not specified', null] },
     blood_group: { bsonType: ['string', 'null'] },
@@ -224,9 +234,10 @@ createValidatedCollection('audit_logs', {
 });
 
 print('[3/6] Setting Up Zero-Knowledge Token & Search Indexes...');
-db.users.createIndex({ email_hash: 1 }, { unique: true });
+db.users.createIndex({ email_hash: 1 }, { unique: true, sparse: true});
 db.users.createIndex({ role: 1 });
 db.users.createIndex({ is_active: 1 });
+db.users.createIndex({ phone_hash: 1 }, { unique: true });
 
 db.encryption_keys.createIndex({ key_alias: 1 }, { unique: true });
 db.encryption_keys.createIndex({ status: 1 });

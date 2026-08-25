@@ -25,6 +25,8 @@ class Settings:
     mongodb_database: str = ""
     local_aes_secret_key: str = ""
     hmac_salt_secret: str = ""
+    jwt_secret_key: str = ""
+    jwt_algorithm: str = "HS256"
 
 
 @lru_cache(maxsize=1)
@@ -40,6 +42,8 @@ def get_settings() -> Settings:
         mongodb_database=os.getenv("MONGODB_DATABASE", "").strip(),
         local_aes_secret_key=os.getenv("LOCAL_AES_SECRET_KEY", "").strip(),
         hmac_salt_secret=os.getenv("HMAC_SALT_SECRET", "").strip(),
+        jwt_secret_key=os.getenv("JWT_SECRET_KEY", "development-secret-change-me").strip(),
+        jwt_algorithm=os.getenv("JWT_ALGORITHM", "HS256").strip(),
     )
 
     settings.upload_dir.mkdir(parents=True, exist_ok=True)

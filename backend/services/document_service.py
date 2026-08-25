@@ -3,8 +3,8 @@ from __future__ import annotations
 from bson import ObjectId
 
 from backend.security.encryption import get_active_dek
-from backend.database.repositories.patient_profiles import get_profile_id, upsert_patient_profile
-from backend.database.repositories.source_documents import insert_source_document
+from backend.repositories.patient_profiles import get_profile_id, upsert_patient_profile
+from backend.repositories.source_documents import insert_source_document
 
 
 def persist_extraction(user_id: ObjectId, extraction: dict) -> dict[str, ObjectId]:

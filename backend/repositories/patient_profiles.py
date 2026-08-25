@@ -4,9 +4,29 @@ from datetime import datetime, timezone
 
 from bson import ObjectId
 
-from backend.security.encryption import ActiveDek, encrypt_text
-from backend.security.hmac_utils import tokenise
 from backend.database.mongodb import get_database
+from backend.security.encryption import ActiveDek, encrypt_text
+from backend.security.hmac_utils import normalize_phone_number, tokenise
+
+
+def _normalize_gender(value: object) -> str | None:
+    if value is None:
+        return None
+
+    normalized = str(value).strip()
+    if not normalized:
+        return None
+
+    lowered = normalized.lower()
+    if lowered in {"male", "m"}:
+        return "MALE"
+    if lowered in {"female", "f"}:
+        return "FEMALE"
+    if lowered == "other":
+        return "OTHER"
+    if lowered == "not specified":
+        return "Not specified"
+    return normalized
 
 
 def _value(fields: dict, *names: str):
@@ -17,23 +37,50 @@ def _value(fields: dict, *names: str):
     return None
 
 
+def _encode_if_present(update: dict, field_name: str, value: object) -> None:
+    if value is not None:
+        update[field_name] = encrypt_text(str(value))
+
+
 def build_profile_update(fields: dict, dek: ActiveDek) -> dict:
     update: dict = {"dek_id": dek.id, "updated_at": datetime.now(timezone.utc)}
+
     encrypted_fields = {
-        "name_enc": _value(fields, "full_name", "child_full_name"),
+        "name_enc": _value(fields, "full_name", "child_full_name", "patient_name", "member_name"),
         "dob_enc": _value(fields, "date_of_birth"),
         "address_enc": _value(fields, "address"),
-        "guardian_name_enc": _value(fields, "father_or_husband_name", "father_name", "relative_name"),
+        "guardian_name_enc": _value(fields, "father_or_husband_name", "father_name", "relative_name", "mother_name", "spouse_name", "policy_holder_name"),
         "place_of_birth_enc": _value(fields, "place_of_birth"),
+        "insurance_details_enc": _value(fields, "insurance_details"),
     }
     for field_name, value in encrypted_fields.items():
-        if value is not None:
-            update[field_name] = encrypt_text(str(value))
+        _encode_if_present(update, field_name, value)
 
     for target in ("gender", "blood_group", "year_of_birth", "nationality"):
         value = _value(fields, target)
         if value is not None:
-            update[target] = value
+            normalized_value = _normalize_gender(value) if target == "gender" else value
+            if normalized_value is not None:
+                update[target] = normalized_value
+
+    phone_value = _value(fields, "mobile_number", "phone_number")
+    if phone_value is not None:
+        normalized_phone = normalize_phone_number(str(phone_value))
+        update["phone_enc"] = encrypt_text(normalized_phone)
+        update["phone_hash"] = tokenise(normalized_phone)
+
+    identifier_enc_map = {
+        "aadhaar_enc": "aadhaar_number",
+        "pan_enc": "pan_number",
+        "voter_id_enc": "epic_number",
+        "driving_licence_enc": "driving_licence_number",
+        "passport_enc": "passport_number",
+        "birth_reg_enc": "registration_number",
+        "health_insurance_enc": "member_id",
+    }
+    for target, source in identifier_enc_map.items():
+        value = _value(fields, source)
+        _encode_if_present(update, target, value)
 
     token_fields = {
         "aadhaar_token": "aadhaar_number",
@@ -48,6 +95,7 @@ def build_profile_update(fields: dict, dek: ActiveDek) -> dict:
         value = _value(fields, source)
         if value is not None:
             update[target] = tokenise(str(value))
+
     return update
 
 
