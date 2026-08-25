@@ -4,3 +4,17 @@ google-genai>=2.9.0
 pydantic>=2.7.0
 python-dotenv>=1.0.1
 python-multipart>=0.0.9
+opencv-python
+pillow 
+numpy 
+matplotlib
+scikit-learn
+pdf2image
+numpy
+boto3
+sentence-transformers
+rapidfuzz
+scipy
+pytest
+pymongo
+python-jose[cryptography]>=3.3.0
