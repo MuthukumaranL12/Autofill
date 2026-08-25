@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 import json
-import os
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-
+import os
 from google import genai
 from google.genai import errors, types
 from pydantic import ValidationError
@@ -203,13 +201,6 @@ class GeminiExtractionService:
             return ExtractionResponse.model_validate(normalized_payload)
         except (TypeError, ValueError, ValidationError) as exc:
             raise ValueError(f"Gemini response did not match the expected extraction structure: {exc}") from exc
-
-    def save_result(self, result: ExtractionResponse, source_file: Path) -> Path:
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-        safe_stem = source_file.stem.replace(" ", "_")
-        output_path = Path(self._settings.results_dir) / f"{timestamp}_{safe_stem}.json"
-        output_path.write_text(json.dumps(result.model_dump(mode="json"), indent=2, ensure_ascii=False), encoding="utf-8")
-        return output_path
 
     @staticmethod
     def _get_response_text(response: Any) -> str:
