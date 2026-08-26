@@ -3,7 +3,7 @@ from io import BytesIO
 from PIL import Image
 
 from backend.models.identity_profile import IdentityProfile
-from backend.profile.profile_repository import ProfileRepository
+from backend.repositories.profile_repository import ProfileRepository
 from backend.security.decryption import decrypt_field
 
 from backend.form_pipeline.textract_service import TextractClient
