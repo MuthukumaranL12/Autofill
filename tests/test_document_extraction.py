@@ -4,8 +4,17 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from bson import Binary, ObjectId
+from fastapi.testclient import TestClient
+from starlette.requests import Request
+import asyncio
 
+from backend.app import app
+from backend.auth import get_authenticated_user_id, security
+from backend.repositories.patient_profiles import build_profile_update
+from backend.repositories.source_documents import redact_sensitive_extraction
 from backend.document_extraction.gemini_service import GeminiExtractionService
+from backend.services.auth_service import create_access_token, login_user, register_user
 
 
 @pytest.fixture
@@ -134,3 +143,145 @@ def test_field_level_and_overall_confidence(service):
     assert result["overall_confidence"] == 0.87
     assert result["extracted_fields"]["pan_number"]["confidence"] == 0.97
     assert result["extracted_fields"]["father_name"]["confidence"] == 0.78
+
+
+def test_patient_profile_update_encrypts_and_tokens_identifiers():
+    fields = {
+        "full_name": {"value": "Ananya Sharma", "confidence": 0.99},
+        "date_of_birth": {"value": "12/06/1999", "confidence": 0.98},
+        "address": {"value": "24 Main Street", "confidence": 0.93},
+        "father_name": {"value": "Ravi Sharma", "confidence": 0.9},
+        "place_of_birth": {"value": "Chennai", "confidence": 0.92},
+        "gender": {"value": "FEMALE", "confidence": 0.99},
+        "aadhaar_number": {"value": "123456789012", "confidence": 0.98},
+        "pan_number": {"value": "ABCDE1234F", "confidence": 0.99},
+        "epic_number": {"value": "ZBC3635570", "confidence": 0.98},
+        "driving_licence_number": {"value": "DL123456", "confidence": 0.97},
+        "passport_number": {"value": "P1234567", "confidence": 0.96},
+        "registration_number": {"value": "BR-1001", "confidence": 0.95},
+        "member_id": {"value": "MEM-7788", "confidence": 0.94},
+    }
+
+    result = build_profile_update(fields, SimpleNamespace(id=ObjectId()))
+
+    assert isinstance(result["name_enc"], Binary)
+    assert isinstance(result["dob_enc"], Binary)
+    assert isinstance(result["address_enc"], Binary)
+    assert isinstance(result["guardian_name_enc"], Binary)
+    assert isinstance(result["place_of_birth_enc"], Binary)
+    assert isinstance(result["aadhaar_enc"], Binary)
+    assert isinstance(result["pan_enc"], Binary)
+    assert isinstance(result["voter_id_enc"], Binary)
+    assert isinstance(result["driving_licence_enc"], Binary)
+    assert isinstance(result["passport_enc"], Binary)
+    assert isinstance(result["birth_reg_enc"], Binary)
+    assert isinstance(result["health_insurance_enc"], Binary)
+    assert result["aadhaar_token"]
+    assert result["pan_token"]
+    assert result["voter_id_token"]
+    assert result["driving_licence_token"]
+    assert result["passport_token"]
+    assert result["birth_reg_token"]
+    assert result["health_insurance_token"]
+    assert result["gender"] == "FEMALE"
+
+
+def test_source_document_redaction_hides_plaintext_sensitive_identifiers():
+    payload = {
+        "document_type": "aadhaar",
+        "overall_confidence": 0.97,
+        "extracted_fields": {
+            "full_name": {"value": "Ananya Sharma", "confidence": 0.99},
+            "aadhaar_number": {"value": "123456789012", "confidence": 0.98},
+            "address": {"value": "24 Main Street", "confidence": 0.93},
+        },
+    }
+
+    sanitized = redact_sensitive_extraction(payload)
+
+    assert sanitized["extracted_fields"]["full_name"]["value"] == "Ananya Sharma"
+    assert sanitized["extracted_fields"]["aadhaar_number"]["value"] is None
+    assert sanitized["extracted_fields"]["address"]["value"] == "24 Main Street"
+
+
+@pytest.mark.parametrize(
+    ("raw_value", "expected"),
+    [
+        ("Male", "MALE"),
+        ("male", "MALE"),
+        ("M", "MALE"),
+        ("Female", "FEMALE"),
+        ("female", "FEMALE"),
+        ("F", "FEMALE"),
+        ("Other", "OTHER"),
+        ("other", "OTHER"),
+        ("Not specified", "Not specified"),
+    ],
+)
+def test_gender_values_are_normalized_for_patient_profile(raw_value, expected):
+    fields = {"gender": {"value": raw_value, "confidence": 0.99}}
+    result = build_profile_update(fields, SimpleNamespace(id=ObjectId()))
+    assert result["gender"] == expected
+
+
+def test_missing_gender_value_does_not_update_profile():
+    fields = {"gender": {"value": None, "confidence": 0.0}}
+    result = build_profile_update(fields, SimpleNamespace(id=ObjectId()))
+    assert "gender" not in result
+
+
+def test_register_and_login_user_flow(monkeypatch):
+    class FakeCollection:
+        def __init__(self):
+            self.rows = []
+
+        def find_one(self, query, *args, **kwargs):
+            if "phone_hash" in query:
+                for row in self.rows:
+                    if row.get("phone_hash") == query["phone_hash"]:
+                        return row
+            return None
+
+        def insert_one(self, row):
+            if "_id" not in row:
+                row["_id"] = ObjectId()
+            self.rows.append(row)
+            return SimpleNamespace(inserted_id=row["_id"])
+
+        def update_one(self, *args, **kwargs):
+            return None
+
+    class FakeDB:
+        def __init__(self):
+            self.users = FakeCollection()
+
+    fake_db = FakeDB()
+    monkeypatch.setattr("backend.services.auth_service.get_database", lambda: fake_db)
+    monkeypatch.setattr("backend.services.auth_service.get_settings", lambda: SimpleNamespace(jwt_secret_key="12345678901234567890123456789012", jwt_algorithm="HS256"))
+    monkeypatch.setattr("backend.auth.get_settings", lambda: SimpleNamespace(jwt_secret_key="12345678901234567890123456789012", jwt_algorithm="HS256"))
+
+    user_id = register_user("+919876543210", "some-password", True)
+    assert user_id is not None
+    inserted_user = fake_db.users.rows[0]
+    assert inserted_user["phone_hash"]
+    assert isinstance(inserted_user["phone_enc"], Binary)
+    assert "email_hash" not in inserted_user
+
+    token = login_user("+919876543210", "some-password")
+    assert token
+    assert create_access_token(str(user_id))
+
+    request = Request({"type": "http", "headers": [(b"authorization", f"Bearer {token}".encode())]})
+    credentials = asyncio.run(security(request))
+    auth_user_id = asyncio.run(get_authenticated_user_id(request, credentials))
+    assert str(auth_user_id) == str(user_id)
+
+
+def test_auth_routes_are_exposed():
+    client = TestClient(app)
+    schema = client.get("/openapi.json")
+    assert schema.status_code == 200
+    paths = schema.json()["paths"]
+    assert "/api/auth/register" in paths
+    assert "/api/auth/login" in paths
+    assert "/api/documents/extract" in paths

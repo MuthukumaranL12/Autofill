@@ -18,3 +18,5 @@ scipy
 pytest
 pymongo
 python-jose[cryptography]>=3.3.0
+pymongo>=4.9.0
+cryptography>=43.0.0

@@ -5,6 +5,8 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
+from backend.auth import get_authenticated_user_id
+from backend.services.document_service import persist_extraction
 from backend.dependencies import get_extraction_service
 from backend.document_extraction.gemini_service import GeminiExtractionService
 from backend.document_extraction.schemas import ExtractionResponse
@@ -24,6 +26,7 @@ ALLOWED_EXTENSIONS = {
 async def extract_document(
     file: UploadFile = File(...),
     service: GeminiExtractionService = Depends(get_extraction_service),
+    user_id=Depends(get_authenticated_user_id),
 ) -> ExtractionResponse:
     filename = file.filename or "document"
     suffix = Path(filename).suffix.lower()
@@ -45,10 +48,13 @@ async def extract_document(
 
         temp_path.write_bytes(contents)
         result = service.extract_document(temp_path, ALLOWED_EXTENSIONS[suffix])
+        persist_extraction(user_id, result.model_dump(mode="python"))
         return result
     except HTTPException:
         raise
     except Exception as exc:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=502, detail=str(exc)) from exc
     finally:
         if temp_path.exists():
