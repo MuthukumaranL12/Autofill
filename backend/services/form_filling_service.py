@@ -121,6 +121,10 @@ class FormFillingService:
                 "last_name", ""
             ),
 
+            phone=profile.get(
+                "phone",""
+            ),
+
             dob=profile.get(
                 "dob", ""
             ),

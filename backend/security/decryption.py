@@ -85,18 +85,12 @@ def decrypt_field(encrypted_binary) -> str:
 
     data = bytes(encrypted_binary)
 
-    print("Encrypted data length:", len(data))
-    print("First 20 bytes:", data[:20])
 
     if len(data) < 28:
         raise ValueError("Invalid encrypted data")
 
     nonce = data[:12]
     ciphertext = data[12:]
-
-    print("Nonce length:", len(nonce))
-    print("Ciphertext length:", len(ciphertext))
-    print("AES key length:", len(_aes_key()))
 
     aesgcm = AESGCM(_aes_key())
 

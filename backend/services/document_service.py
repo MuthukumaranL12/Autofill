@@ -11,5 +11,9 @@ def persist_extraction(user_id: ObjectId, extraction: dict) -> dict[str, ObjectI
     dek = get_active_dek()
     profile_id = get_profile_id(user_id)
     source_document_id = insert_source_document(user_id, profile_id, extraction)
-    upsert_patient_profile(user_id, profile_id, extraction.get("extracted_fields", {}), dek)
+    profile_fields = {key: value
+    for key, value in extraction.items()
+    if key not in {"document_type", "confidence_score"}
+    }
+    upsert_patient_profile(user_id, profile_id, profile_fields, dek)
     return {"source_document_id": source_document_id, "profile_id": profile_id}

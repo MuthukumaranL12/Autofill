@@ -34,13 +34,7 @@
         </nav>
 
         <div class="user-area">
-            <button
-                class="avatar"
-                id="avatarButton"
-                type="button"
-            >
-                M
-            </button>
+            <button class="avatar" id="avatarButton" type="button">M</button>
         </div>
 
     </div>
@@ -49,15 +43,12 @@
 <main class="page">
 
     <section class="heading-row">
-
         <div>
             <p class="eyebrow">IDENTITY PROFILE</p>
-
             <h1>Your profile</h1>
-
             <p>
-                Review the information extracted from your documents.
-                You can edit any field before using it for autofill.
+                Review and manage the identity information saved from
+                your consented documents.
             </p>
         </div>
 
@@ -65,7 +56,6 @@
             <span>✓</span>
             Protected profile
         </div>
-
     </section>
 
     <div
@@ -75,285 +65,104 @@
         aria-live="polite"
     ></div>
 
-    <section
-        class="loading-card"
-        id="loadingState"
-    >
+    <section class="loading-card" id="loadingState">
         <div class="loader"></div>
-
         <strong>Loading your profile...</strong>
-
-        <span>
-            Decrypting and preparing your saved information.
-        </span>
+        <span>Decrypting and preparing your saved information.</span>
     </section>
 
-    <form
-        id="profileForm"
-        class="profile-form"
-        hidden
-    >
+    <section class="profile-view" id="profileView" hidden></section>
 
-        <section class="profile-card">
-
-            <div class="card-heading">
-                <div>
-                    <p class="eyebrow">PERSONAL DETAILS</p>
-                    <h2>Basic information</h2>
-                </div>
-            </div>
-
-            <div class="field-grid">
-
-                <div class="field field-wide">
-                    <label for="name">Full name</label>
-                    <input id="name" name="name" type="text">
-                </div>
-
-                <div class="field">
-                    <label for="first_name">First name</label>
-                    <input id="first_name" name="first_name" type="text">
-                </div>
-
-                <div class="field">
-                    <label for="middle_name">Middle name</label>
-                    <input id="middle_name" name="middle_name" type="text">
-                </div>
-
-                <div class="field">
-                    <label for="last_name">Last name</label>
-                    <input id="last_name" name="last_name" type="text">
-                </div>
-
-                <div class="field">
-                    <label for="dob">Date of birth</label>
-                    <input id="dob" name="dob" type="text">
-                </div>
-
-                <div class="field">
-                    <label for="gender">Gender</label>
-
-                    <select id="gender" name="gender">
-                        <option value="">Not specified</option>
-                        <option value="MALE">Male</option>
-                        <option value="FEMALE">Female</option>
-                        <option value="OTHER">Other</option>
-                    </select>
-                </div>
-
-                <div class="field">
-                    <label for="year_of_birth">Year of birth</label>
-                    <input
-                        id="year_of_birth"
-                        name="year_of_birth"
-                        type="text"
-                    >
-                </div>
-
-                <div class="field">
-                    <label for="guardian_name">Guardian name</label>
-                    <input
-                        id="guardian_name"
-                        name="guardian_name"
-                        type="text"
-                    >
-                </div>
-
-                <div class="field field-wide">
-                    <label for="place_of_birth">Place of birth</label>
-                    <input
-                        id="place_of_birth"
-                        name="place_of_birth"
-                        type="text"
-                    >
-                </div>
-
-            </div>
-
-        </section>
-
-        <section class="profile-card">
-
-            <div class="card-heading">
-                <div>
-                    <p class="eyebrow">ADDRESS</p>
-                    <h2>Address information</h2>
-                </div>
-            </div>
-
-            <div class="field-grid">
-
-                <div class="field field-wide">
-                    <label for="address">Complete address</label>
-                    <textarea
-                        id="address"
-                        name="address"
-                        rows="3"
-                    ></textarea>
-                </div>
-
-                <div class="field">
-                    <label for="house_number">House number</label>
-                    <input
-                        id="house_number"
-                        name="house_number"
-                        type="text"
-                    >
-                </div>
-
-                <div class="field">
-                    <label for="street">Street</label>
-                    <input id="street" name="street" type="text">
-                </div>
-
-                <div class="field">
-                    <label for="locality">Locality</label>
-                    <input id="locality" name="locality" type="text">
-                </div>
-
-                <div class="field">
-                    <label for="city">City</label>
-                    <input id="city" name="city" type="text">
-                </div>
-
-                <div class="field">
-                    <label for="state">State</label>
-                    <input id="state" name="state" type="text">
-                </div>
-
-                <div class="field">
-                    <label for="pincode">Pincode</label>
-                    <input id="pincode" name="pincode" type="text">
-                </div>
-
-            </div>
-
-        </section>
-
-        <section class="profile-card">
-
-            <div class="card-heading">
-                <div>
-                    <p class="eyebrow">IDENTIFIERS</p>
-                    <h2>Government and registration details</h2>
-                </div>
-
-                <span class="encrypted-label">
-                    Encrypted at rest
-                </span>
-            </div>
-
-            <div class="sensitive-note">
-                <span>i</span>
-
+    <section class="profile-editor" id="profileEditor" hidden>
+        <div class="editor-header">
+            <div>
+                <p class="eyebrow">EDIT PROFILE</p>
+                <h2>Update your information</h2>
                 <p>
-                    These values are decrypted only for your
-                    authenticated profile view. They remain encrypted
-                    in the database.
+                    Changes are encrypted before being stored. Leave a
+                    field blank only when you want to remove its value.
                 </p>
             </div>
+        </div>
 
-            <div class="field-grid">
-
-                <div class="field">
-                    <label for="aadhaar_number">
-                        Aadhaar number
-                    </label>
-
-                    <input
-                        id="aadhaar_number"
-                        name="aadhaar_number"
-                        type="text"
-                        autocomplete="off"
-                    >
-                </div>
-
-                <div class="field">
-                    <label for="voter_id">Voter ID</label>
-
-                    <input
-                        id="voter_id"
-                        name="voter_id"
-                        type="text"
-                        autocomplete="off"
-                    >
-                </div>
-
-                <div class="field">
-                    <label for="birth_registration_number">
-                        Birth registration number
-                    </label>
-
-                    <input
-                        id="birth_registration_number"
-                        name="birth_registration_number"
-                        type="text"
-                        autocomplete="off"
-                    >
-                </div>
-
-            </div>
-
-        </section>
+        <form id="profileForm" class="profile-form"></form>
 
         <div class="form-actions">
-
-            <span
-                class="save-status"
-                id="saveStatus"
-            ></span>
+            <span class="save-status" id="saveStatus"></span>
 
             <button
                 class="secondary-button"
                 id="cancelButton"
                 type="button"
             >
-                Reset changes
+                Cancel
             </button>
 
             <button
                 class="primary-button"
                 id="saveButton"
                 type="submit"
+                form="profileForm"
             >
-                <span id="saveButtonText">
-                    Save changes
-                </span>
-
-                <span
-                    id="saveSpinner"
-                    class="spinner"
-                    hidden
-                ></span>
+                <span id="saveButtonText">Save changes</span>
+                <span id="saveSpinner" class="spinner" hidden></span>
             </button>
+        </div>
+    </section>
 
+    <section class="danger-card" id="dangerCard" hidden>
+        <div>
+            <p class="eyebrow danger-eyebrow">DANGER ZONE</p>
+            <h2>Delete identity profile</h2>
+            <p>
+                Permanently remove your complete saved identity profile.
+                This action cannot be undone.
+            </p>
         </div>
 
-    </form>
-
-    <section
-        class="empty-card"
-        id="emptyState"
-        hidden
-    >
-        <div class="empty-icon">ID</div>
-
-        <h2>No profile found</h2>
-
-        <p>
-            Upload an identity document first so MedForm can
-            extract information for your profile.
-        </p>
-
-        <a
-            class="primary-link"
-            href="../upload/upload.html"
+        <button
+            class="danger-button"
+            id="deleteProfileButton"
+            type="button"
         >
+            Delete entire profile
+        </button>
+    </section>
+
+    <section class="empty-card" id="emptyState" hidden>
+        <div class="empty-icon">ID</div>
+        <h2>No profile found</h2>
+        <p>
+            Upload an identity document first so MedForm can extract
+            information for your profile.
+        </p>
+        <a class="primary-link" href="../upload/upload.html">
             Upload document
         </a>
     </section>
 
 </main>
+
+<div class="modal-backdrop" id="deleteModal" hidden>
+    <section class="confirm-modal" role="dialog" aria-modal="true">
+        <div class="modal-icon">!</div>
+
+        <p class="eyebrow danger-eyebrow">CONFIRM DELETION</p>
+        <h2 id="deleteModalTitle">Delete this information?</h2>
+        <p id="deleteModalMessage">
+            This information will be permanently removed from your profile.
+        </p>
+
+        <div class="modal-actions">
+            <button class="secondary-button" id="modalCancelButton" type="button">
+                Cancel
+            </button>
+            <button class="danger-button" id="modalConfirmButton" type="button">
+                Delete
+            </button>
+        </div>
+    </section>
+</div>
 
 <footer>
     <span>MedForm</span>

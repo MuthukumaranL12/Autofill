@@ -147,7 +147,7 @@ def parse_address(address: str) -> dict[str, str]:
     house_number = ""
 
     house_match = re.match(
-        r"^([0-9]+[A-Za-z]?(?:[-/][0-9A-Za-z]+)?)\b",
+        r"^#?([0-9]+[A-Za-z]?(?:[-/][0-9A-Za-z]+)?)\b",
         working
     )
 
@@ -252,6 +252,6 @@ def parse_address(address: str) -> dict[str, str]:
 if __name__=="__main__":
     res=parse_name("Abhiram Raghunand")
     print(res)
-    address="3 SWWC 407 SFS 4th phase Yelahanka new town Bangalore Karnataka 560064"
+    address="#3 SWWC 407 SFS 4th phase Yelahanka new town Bangalore Karnataka 560064"
     res1=parse_address(address=address)
     print(res1)

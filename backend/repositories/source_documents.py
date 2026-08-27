@@ -29,9 +29,11 @@ SENSITIVE_FIELDS = {
 
 def redact_sensitive_extraction(extraction: dict) -> dict:
     sanitized = dict(extraction)
-    source_fields = extraction.get("extracted_fields", {}) or {}
+    # source_fields = extraction.get("extracted_fields", {}) or {}
     redacted_fields = {}
-    for key, value in source_fields.items():
+    for key, value in extraction.items():
+        if key in {"document_type", "confidence_score"}:
+            continue
         if isinstance(value, dict):
             redacted = dict(value)
             if (
@@ -57,7 +59,7 @@ def insert_source_document(user_id: ObjectId, profile_id: ObjectId, extraction: 
         "source": "gemini",
         "s3_key_enc": "",
         "ocr_status": "success",
-        "confidence_score": extraction["overall_confidence"],
+        "confidence_score": extraction["confidence_score"],
         "manual_review_required": False,
         "manual_verified_by": None,
         "gemini_raw_response": sanitized_extraction,

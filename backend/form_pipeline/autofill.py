@@ -17,16 +17,35 @@ class AutoFill:
     def set_profile(self, profile: IdentityProfile) -> None:
         self.profile = profile
 
+    # Canonical form fields are not always named exactly like the
+    # IdentityProfile attributes. Keep this mapping in the final
+    # resolution layer so the semantic matcher remains responsible
+    # only for identifying what the form field means.
+    CANONICAL_TO_PROFILE_FIELD = {
+        "phone_number": "phone",
+        "father_name": "guardian_name",
+        "house_flat": "house_number",
+    }
+
     def resolve_value(self, matched_field: MatchField) -> str | None:
         if not matched_field.canonical_field or self.profile is None:
             return None
 
-        value = getattr(self.profile, matched_field.canonical_field, None)
+        canonical_field = matched_field.canonical_field.strip().lower()
+
+        profile_field = self.CANONICAL_TO_PROFILE_FIELD.get(
+            canonical_field,
+            canonical_field,
+        )
+
+        value = getattr(self.profile, profile_field, None)
+
         if value is None:
             return None
 
         if isinstance(value, str):
-            return value
+            value = value.strip()
+            return value if value else None
 
         return str(value)
 

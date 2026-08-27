@@ -9,6 +9,8 @@ class IdentityProfile(BaseModel):
     middle_name: str|None=None
     last_name: str|None=None
 
+    phone: str |None=None
+
     dob: str|None=None
 
     address: str|None=None

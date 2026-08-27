@@ -37,7 +37,6 @@ CANONOICAL_FIELDS={
         "phone number",
         "mobile number",
         "telephone number",
-        "Landline number",
         "phone",
         "mobile",
         "phone number",
@@ -62,13 +61,16 @@ CANONOICAL_FIELDS={
     "mother_name":[
         "mother's name",
         "mother name",
-        "name of mother"
+        "name of mother",
+        "guardian name"
     ],
 
     "father_name":[
         "father's name",
         "father name",
         "name of father"
+        "guardian name",
+        "father's/spouse name"
     ],
 
     "spouse_name":[

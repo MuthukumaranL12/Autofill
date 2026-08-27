@@ -5,6 +5,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from pydantic import BaseModel
+from fastapi.responses import JSONResponse
 
 from backend.auth import get_authenticated_user_id
 from backend.services.document_service import persist_extraction
@@ -77,11 +78,23 @@ async def extract_document(
             temp_path,
             ALLOWED_EXTENSIONS[suffix],
         )
+        print("[EXTRACT] Gemini extraction completed")
+        print("[EXTRACT] Result type:", type(result))
+        print("[EXTRACT] Result:", result)
+
+        response_data = result.model_dump(mode="json")
+
+        print("[EXTRACT] Response data prepared:")
+        print(response_data)
+
+        return JSONResponse(
+            content=response_data
+        )
 
         # IMPORTANT:
         # Extraction is returned to the frontend only.
         # Nothing is persisted before explicit user consent.
-        return result
+        # return result
 
     except HTTPException:
         raise

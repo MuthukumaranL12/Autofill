@@ -15,6 +15,9 @@
   --accent-dark: #405a76;
   --success: #547a66;
 }
+[hidden] {
+  display: none !important;
+}
 
 body {
   margin: 0;

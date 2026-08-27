@@ -3,141 +3,346 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MedForm — Dashboard</title>
+  <meta name="description" content="MedForm — secure, consent-based identity autofill for medical forms.">
+  <title>MedForm — Secure Medical Form Autofill</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a class="brand" href="#" aria-label="MedForm home">
+
+      <a class="brand" href="index.html" aria-label="MedForm home">
         <span class="brand-mark">M</span>
         <span>MedForm</span>
       </a>
 
       <nav class="nav" aria-label="Main navigation">
-        <a class="nav-link active" href="#dashboard">Dashboard</a>
-        <a class="nav-link" href="#documents">Documents</a>
-        <a class="nav-link" href="#forms">Forms</a>
-        <a class="nav-link" href="#profile">Profile</a>
-        <button class="nav-link logout" id="logoutBtn" type="button">Logout</button>
+        <a class="nav-link active" href="#home">Home</a>
+        <a class="nav-link protected-nav-link" href="#" data-action="dashboard">Dashboard</a>
+        <a class="nav-link protected-nav-link" href="#" data-action="upload">Documents</a>
+        <a class="nav-link protected-nav-link" href="#" data-action="fill">Forms</a>
+        <a class="nav-link protected-nav-link" href="#" data-action="profile">Profile</a>
+        <a class="nav-link" href="#how-it-works">How it works</a>
+        <a class="nav-link" href="#features">Features</a>
       </nav>
 
-      <div class="user-area">
-        <span class="welcome">Welcome, <strong>Muthu</strong></span>
-        <button class="avatar" type="button" aria-label="Open profile">M</button>
+      <div class="auth-actions">
+        <a class="login-link" href="pages/login/login.html">Log in</a>
+        <a class="signup-button" href="pages/register/register.html">Sign up</a>
       </div>
+
     </div>
   </header>
 
-  <main id="dashboard" class="page">
+  <main id="home" class="page">
+
+    <!-- HERO -->
     <section class="hero">
-      <div>
-        <p class="eyebrow">PERSONAL HEALTH DOCUMENTS</p>
-        <h1>Welcome back, Muthu</h1>
-        <p class="hero-text">Complete your medical forms faster with your saved information.</p>
-      </div>
-      <div class="hero-badge" aria-hidden="true">
-        <span>✦</span>
-      </div>
-    </section>
+      <div class="hero-copy">
+        <p class="eyebrow">SECURE IDENTITY • SMART AUTOFILL</p>
 
-    <section class="quick-actions" aria-label="Quick actions">
-      <article class="action-card">
-        <div class="action-icon upload-icon">↑</div>
-        <div class="action-content">
-          <h2>Upload Document</h2>
-          <p>Add Aadhaar, PAN, Voter ID or another identity document.</p>
-          <button class="action-button" type="button" data-action="upload">Upload document <span>→</span></button>
+        <h1>Medical forms, filled with less effort.</h1>
+
+        <p class="hero-text">
+          MedForm securely stores your identity information with your consent
+          and uses it to help fill medical forms faster and more accurately.
+        </p>
+
+        <div class="hero-actions">
+          <button
+            class="primary-cta protected-action"
+            type="button"
+            data-action="fill"
+          >
+            Fill a medical form
+            <span>→</span>
+          </button>
+
+          <button
+            class="secondary-cta protected-action"
+            type="button"
+            data-action="upload"
+          >
+            Upload identity document
+          </button>
         </div>
-      </article>
 
-      <article class="action-card primary-card">
-        <div class="action-icon form-icon">✎</div>
-        <div class="action-content">
-          <h2>Fill a Form</h2>
-          <p>Use your saved identity information to fill a medical form.</p>
-          <button class="action-button primary-button" type="button" data-action="fill">Fill a form <span>→</span></button>
+        <p class="hero-note">
+          Your extracted information is reviewed by you before it is saved.
+        </p>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="visual-card">
+          <div class="visual-card-top">
+            <span class="visual-label">MEDFORM</span>
+            <span class="secure-badge">SECURE</span>
+          </div>
+
+          <div class="visual-document">
+            <div class="document-line large"></div>
+            <div class="document-line"></div>
+            <div class="document-line short"></div>
+            <div class="document-line"></div>
+          </div>
+
+          <div class="visual-flow">
+            <span class="flow-dot">1</span>
+            <span class="flow-line"></span>
+            <span class="flow-dot">2</span>
+            <span class="flow-line"></span>
+            <span class="flow-dot">✓</span>
+          </div>
+
+          <div class="visual-caption">
+            <strong>Consent-based autofill</strong>
+            <span>Review before saving or filling</span>
+          </div>
         </div>
-      </article>
-    </section>
-
-    <section class="stats" aria-label="Dashboard statistics">
-      <div class="stat-card">
-        <span class="stat-label">DOCUMENTS UPLOADED</span>
-        <strong class="stat-value">4</strong>
-        <span class="stat-note">Identity documents</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">FORMS COMPLETED</span>
-        <strong class="stat-value">2</strong>
-        <span class="stat-note">Successfully autofilled</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">PROFILE STATUS</span>
-        <strong class="stat-value status">Ready</strong>
-        <span class="stat-note"><span class="status-dot"></span> Information available</span>
       </div>
     </section>
 
-    <section id="documents" class="recent-section">
+    <!-- QUICK ACTIONS -->
+    <section class="section" aria-labelledby="get-started-title">
+      <div class="section-heading centered">
+        <p class="eyebrow">GET STARTED</p>
+        <h2 id="get-started-title">Everything you need in one place</h2>
+        <p>
+          Start with your identity documents or go directly to filling a
+          medical form.
+        </p>
+      </div>
+
+      <div class="action-grid">
+
+        <article class="action-card">
+          <div class="action-icon">↑</div>
+          <div>
+            <span class="card-kicker">IDENTITY</span>
+            <h3>Upload a document</h3>
+            <p>
+              Add an Aadhaar, PAN, passport, driving licence, voter ID,
+              or another supported identity document.
+            </p>
+
+            <button
+              class="text-action protected-action"
+              type="button"
+              data-action="upload"
+            >
+              Upload document <span>→</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="action-card featured-card">
+          <div class="action-icon form-icon">✎</div>
+          <div>
+            <span class="card-kicker">AUTOFILL</span>
+            <h3>Fill a medical form</h3>
+            <p>
+              Upload a blank medical form and let MedForm populate it using
+              information from your consented identity profile.
+            </p>
+
+            <button
+              class="text-action featured-action protected-action"
+              type="button"
+              data-action="fill"
+            >
+              Start autofill <span>→</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="action-card">
+          <div class="action-icon profile-icon">◎</div>
+          <div>
+            <span class="card-kicker">ACCOUNT</span>
+            <h3>View your profile</h3>
+            <p>
+              Review the identity information that you have explicitly
+              approved for use by MedForm.
+            </p>
+
+            <button
+              class="text-action protected-action"
+              type="button"
+              data-action="profile"
+            >
+              View profile <span>→</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="action-card">
+          <div class="action-icon account-icon">M</div>
+          <div>
+            <span class="card-kicker">GET STARTED</span>
+            <h3>Create your account</h3>
+            <p>
+              Sign up for MedForm and create your secure identity profile
+              before using document extraction and autofill.
+            </p>
+
+            <a class="text-action" href="pages/register/register.html">
+              Create account <span>→</span>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="section process-section">
+      <div class="section-heading centered">
+        <p class="eyebrow">HOW IT WORKS</p>
+        <h2>Designed around your consent</h2>
+        <p>
+          MedForm separates extraction, review, and storage so you remain
+          in control of your identity information.
+        </p>
+      </div>
+
+      <div class="process-grid">
+        <article class="process-card">
+          <span class="process-number">01</span>
+          <h3>Upload</h3>
+          <p>
+            Upload an identity document or a medical form through the
+            appropriate MedForm workflow.
+          </p>
+        </article>
+
+        <article class="process-card">
+          <span class="process-number">02</span>
+          <h3>Extract & review</h3>
+          <p>
+            Identity information is extracted and presented to you for
+            review before anything is stored.
+          </p>
+        </article>
+
+        <article class="process-card">
+          <span class="process-number">03</span>
+          <h3>Consent</h3>
+          <p>
+            Your information is added to your identity profile only after
+            you explicitly give consent.
+          </p>
+        </article>
+
+        <article class="process-card">
+          <span class="process-number">04</span>
+          <h3>Autofill</h3>
+          <p>
+            Use your consented profile information to populate supported
+            medical forms automatically.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="section features-section">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">RECENT ACTIVITY</p>
-          <h2>Your documents</h2>
+          <p class="eyebrow">WHY MEDFORM</p>
+          <h2>A simpler way to handle repetitive forms</h2>
         </div>
-        <button class="text-button" type="button" data-action="documents">View all <span>→</span></button>
+
+        <p class="section-side-text">
+          Built to reduce repeated data entry while keeping the user in
+          control of personal identity information.
+        </p>
       </div>
 
-      <div class="document-list">
-        <article class="document-row">
-          <div class="doc-icon">ID</div>
-          <div class="doc-info">
-            <strong>Aadhaar Card</strong>
-            <span>Uploaded recently</span>
+      <div class="feature-list">
+        <div class="feature-row">
+          <span class="feature-icon">✓</span>
+          <div>
+            <strong>Consent before storage</strong>
+            <p>
+              Extracted identity information is reviewed first and is not
+              persisted until you explicitly approve it.
+            </p>
           </div>
-          <span class="verified">Verified</span>
-        </article>
+        </div>
 
-        <article class="document-row">
-          <div class="doc-icon">ID</div>
-          <div class="doc-info">
-            <strong>PAN Card</strong>
-            <span>Uploaded recently</span>
+        <div class="feature-row">
+          <span class="feature-icon">↗</span>
+          <div>
+            <strong>Automatic form filling</strong>
+            <p>
+              MedForm identifies form fields and matches them with relevant
+              information from your identity profile.
+            </p>
           </div>
-          <span class="verified">Verified</span>
-        </article>
+        </div>
 
-        <article class="document-row">
-          <div class="doc-icon">ID</div>
-          <div class="doc-info">
-            <strong>Voter ID</strong>
-            <span>Uploaded earlier</span>
+        <div class="feature-row">
+          <span class="feature-icon">◎</span>
+          <div>
+            <strong>Centralized identity profile</strong>
+            <p>
+              Keep approved identity information available for future
+              autofill workflows instead of repeatedly entering it.
+            </p>
           </div>
-          <span class="verified">Verified</span>
-        </article>
+        </div>
       </div>
     </section>
 
-    <section id="forms" class="info-banner">
-      <div class="banner-icon">✓</div>
+    <!-- FINAL CTA -->
+    <section class="final-cta">
       <div>
-        <strong>Ready to autofill?</strong>
-        <p>Upload a medical form and let MedForm populate it using your consented profile information.</p>
+        <p class="eyebrow">READY WHEN YOU ARE</p>
+        <h2>Spend less time repeating the same information.</h2>
+        <p>
+          Create your MedForm account or sign in to start using
+          consent-based identity autofill.
+        </p>
       </div>
-      <button class="banner-button" type="button" data-action="fill">Start autofill</button>
+
+      <div class="final-actions">
+        <a class="secondary-cta" href="pages/login/login.html">Log in</a>
+        <a class="primary-cta link-button" href="pages/register/register.html">
+          Sign up
+          <span>→</span>
+        </a>
+      </div>
     </section>
+
   </main>
 
   <footer>
-    <span>MedForm</span>
-    <span>Secure identity • Consent-based autofill</span>
+    <div>
+      <strong>MedForm</strong>
+      <span>Secure identity • Consent-based autofill</span>
+    </div>
+
+    <div class="footer-links">
+      <a href="pages/login/login.html">Log in</a>
+      <a href="pages/register/register.html">Sign up</a>
+      <button class="footer-protected" type="button" data-action="upload">
+        Documents
+      </button>
+      <button class="footer-protected" type="button" data-action="fill">
+        Forms
+      </button>
+    </div>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="js/auth.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>MedForm — Completed Form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="result.css" />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="../../index.html" aria-label="MedForm dashboard">
+          <span class="brand-mark">M</span>
+          <span>MedForm</span>
+        </a>
+
+        <nav class="nav">
+          <a href="../../index.html">Dashboard</a>
+          <a href="../upload/upload.html">Documents</a>
+          <a class="active" href="../autofill/autofill.html">Forms</a>
+          <a href="../profile/profile.html">Profile</a>
+        </nav>
+
+        <div class="user-area">
+          <span>Welcome, <strong>Muthu</strong></span>
+          <button class="avatar" type="button">M</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="success-head">
+        <div class="success-icon">✓</div>
+        <p class="eyebrow">AUTOFILL COMPLETE</p>
+        <h1>Your form is ready</h1>
+        <p>Review the completed document before submitting it.</p>
+      </section>
+
+      <section class="result-layout">
+        <div class="preview-card">
+          <div class="toolbar">
+            <strong id="resultFileName">Completed form</strong>
+            <button id="previewButton" type="button">
+              Open full preview
+            </button>
+          </div>
+
+          <div class="preview">
+            <img
+              id="resultPreviewImage"
+              class="generated-form"
+              alt="Completed form preview"
+            />
+          </div>
+        </div>
+
+        <aside class="side">
+          <div class="stat">
+            <span>FORM STATUS</span>
+            <strong>Ready</strong>
+            <small>Generated successfully by MedForm</small>
+          </div>
+
+          <div class="stat">
+            <span>OUTPUT FORMAT</span>
+            <strong>PNG</strong>
+            <small>Completed form image</small>
+          </div>
+
+          <div class="review">
+            <div class="review-title">
+              <strong>Before you submit</strong>
+              <span>!</span>
+            </div>
+            <p>
+              Review the completed document carefully and verify that the
+              information is correct.
+            </p>
+            <button id="reviewButton" type="button">
+              Review form →
+            </button>
+          </div>
+
+          <button class="download" id="downloadButton" type="button">
+            Download completed form <span>↓</span>
+          </button>
+
+          <button class="again" id="againButton" type="button">
+            Fill another form
+          </button>
+        </aside>
+      </section>
+    </main>
+
+    <footer>
+      <span>MedForm</span>
+      <span>Secure identity • Consent-based autofill</span>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../../js/auth.js"></script>
+    <script src="result.js"></script>
+  </body>
+</html>

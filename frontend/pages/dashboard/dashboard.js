@@ -70,4 +70,29 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     document.getElementById("documentCount").textContent = "—";
     document.getElementById("profileFieldCount").textContent = "—";
+
+
+    /*
+     * Dashboard navigation
+     *
+     * Connect the existing dashboard action buttons
+     * to the corresponding frontend pages.
+     */
+    const navigationRoutes = {
+        fill: "../autofill/autofill.html",
+        upload: "../upload/upload.html",
+        documents: "../upload/upload.html",
+        profile: "../profile/profile.html"
+    };
+
+    document.querySelectorAll("[data-action]").forEach((button) => {
+        button.addEventListener("click", () => {
+            const action = button.dataset.action;
+            const destination = navigationRoutes[action];
+
+            if (destination) {
+                window.location.href = destination;
+            }
+        });
+    });
 });

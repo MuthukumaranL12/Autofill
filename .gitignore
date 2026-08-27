@@ -7,6 +7,9 @@ __pycache__/
 outputs/
 backend/repositories/profile_repository_old.py
 backend/routes/document_routes_old.py
+backend/form_pipeline/autofill_corrected.py
+backend/repositories/profile_repository_v2.py
+backend/routes/profile_routes_v1.py
 # Virtual environments
 .venv/
 venv/
