@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>MedForm — Consent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="consent.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="../../index.html"
+          ><span class="brand-mark">M</span><span>MedForm</span></a
+        >
+        <nav class="nav">
+          <a href="../dashboard/dashboard.html">Dashboard</a
+          ><a href="../documents/documents.html">Documents</a
+          ><a href="../autofill/autofill.html">Forms</a
+          ><a class="active" href="consent.html">Privacy</a>
+        </nav>
+        <div class="user-area">
+          <span>Welcome, <strong>Muthu</strong></span
+          ><button class="avatar">M</button>
+        </div>
+      </div>
+    </header>
+    <main class="page">
+      <section class="heading">
+        <p class="eyebrow">PRIVACY & CONTROL</p>
+        <h1>Consent management</h1>
+        <p>
+          You control when your identity information is used. Review and manage
+          your autofill permissions below.
+        </p>
+      </section>
+      <section class="notice">
+        <div class="notice-icon">✓</div>
+        <div>
+          <strong>Your information stays under your control</strong>
+          <p>
+            MedForm only uses your saved information for an autofill action you
+            explicitly start.
+          </p>
+        </div>
+      </section>
+      <section class="consent-card">
+        <div class="card-head">
+          <div>
+            <p class="eyebrow">AUTOFILL PERMISSIONS</p>
+            <h2>Profile information</h2>
+          </div>
+          <span class="enabled">Enabled</span>
+        </div>
+        <div class="permission">
+          <div class="permission-icon">P</div>
+          <div class="permission-text">
+            <strong>Use saved profile information</strong>
+            <p>
+              Allow MedForm to use your identity profile when filling a form.
+            </p>
+          </div>
+          <label class="switch"
+            ><input type="checkbox" checked /><span></span
+          ></label>
+        </div>
+        <div class="permission">
+          <div class="permission-icon">D</div>
+          <div class="permission-text">
+            <strong>Use uploaded documents</strong>
+            <p>
+              Allow extracted information from verified documents to populate
+              your profile.
+            </p>
+          </div>
+          <label class="switch"
+            ><input type="checkbox" checked /><span></span
+          ></label>
+        </div>
+        <div class="permission">
+          <div class="permission-icon">A</div>
+          <div class="permission-text">
+            <strong>Autofill medical forms</strong>
+            <p>
+              Allow your profile information to be inserted into forms you
+              upload.
+            </p>
+          </div>
+          <label class="switch"
+            ><input type="checkbox" checked /><span></span
+          ></label>
+        </div>
+      </section>
+      <section class="token-card">
+        <div>
+          <p class="eyebrow">CURRENT SESSION</p>
+          <h2>Consent is required per action</h2>
+          <p>
+            When you start an autofill operation, MedForm creates a temporary
+            consent context for that operation.
+          </p>
+        </div>
+        <div class="token-status">
+          <span class="dot"></span><strong>No active token</strong
+          ><small>Nothing is currently being shared</small>
+        </div>
+      </section>
+      <section class="history">
+        <div class="history-head">
+          <div>
+            <p class="eyebrow">RECENT CONSENT ACTIVITY</p>
+            <h2>Permission history</h2>
+          </div>
+          <button id="clearButton">Clear history</button>
+        </div>
+        <div class="history-row">
+          <span class="history-dot"></span>
+          <div>
+            <strong>Medical form autofill</strong
+            ><small>Consent granted · Today, 11:42 PM</small>
+          </div>
+          <span class="revoked">Completed</span>
+        </div>
+        <div class="history-row">
+          <span class="history-dot"></span>
+          <div>
+            <strong>Profile information</strong
+            ><small>Consent granted · Today, 11:35 PM</small>
+          </div>
+          <span class="revoked">Completed</span>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <span>MedForm</span><span>Secure identity • Consent-based autofill</span>
+    </footer>
+    <div class="toast" id="toast"></div>
+    <script src="consent.js"></script>
+  </body>
+</html>

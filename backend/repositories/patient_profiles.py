@@ -7,6 +7,7 @@ from bson import ObjectId
 from backend.database.mongodb import get_database
 from backend.security.encryption import ActiveDek, encrypt_text
 from backend.security.hmac_utils import normalize_phone_number, tokenise
+from backend.repositories.profile_normalizer import parse_address,parse_name
 
 
 def _normalize_gender(value: object) -> str | None:
@@ -45,10 +46,32 @@ def _encode_if_present(update: dict, field_name: str, value: object) -> None:
 def build_profile_update(fields: dict, dek: ActiveDek) -> dict:
     update: dict = {"dek_id": dek.id, "updated_at": datetime.now(timezone.utc)}
 
+    #name
+    raw_name=_value(fields,"full_name","name")
+    name_parts = (parse_name(str(raw_name)) if raw_name else {})
+
+    raw_address=_value(fields,"address")
+
+    address_parts=(parse_address(str(raw_address)) if raw_address else {})
+
     encrypted_fields = {
-        "name_enc": _value(fields, "full_name", "child_full_name", "patient_name", "member_name"),
+        "name_enc": name_parts.get("full_name"),
+        "first_name_enc": name_parts.get("first_name"),
+        "middle_name_enc": name_parts.get("middle_name"),
+        "last_name_enc": name_parts.get("last_name"),
+        
         "dob_enc": _value(fields, "date_of_birth"),
-        "address_enc": _value(fields, "address"),
+        # Keep original complete address
+        "address_enc": address_parts.get("full_address"),
+
+        # Structured address
+        "house_number_enc": address_parts.get("house_number"),
+        "street_enc": address_parts.get("street"),
+        "locality_enc": address_parts.get("locality"),
+        "city_enc": address_parts.get("city"),
+        "state_enc": address_parts.get("state"),
+        "pincode_enc": address_parts.get("pincode"),
+
         "guardian_name_enc": _value(fields, "father_or_husband_name", "father_name", "relative_name", "mother_name", "spouse_name", "policy_holder_name"),
         "place_of_birth_enc": _value(fields, "place_of_birth"),
         "insurance_details_enc": _value(fields, "insurance_details"),

@@ -5,6 +5,8 @@ __pycache__/
 *.pyo
 #Output images
 outputs/
+backend/repositories/profile_repository_old.py
+backend/routes/document_routes_old.py
 # Virtual environments
 .venv/
 venv/

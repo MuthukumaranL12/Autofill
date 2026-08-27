@@ -71,9 +71,22 @@ createValidatedCollection('patient_profiles', {
     _id: { bsonType: 'objectId' },
     user_id: { bsonType: 'objectId' },
     // Encrypted PII Fields (Stored as AES-256-GCM BinData)
-    name_enc: { bsonType: 'binData' },
+    name_enc: { bsonType: 'binData',description: 'Encrypted full/original name'},
+    email_enc: { bsonType: 'binData' },
+    phone_enc: { bsonType: ['binData', 'null'], description: 'Reversible AES-256 for display/OTP verification' },
+    first_name_enc: {bsonType: ['binData', 'null'],description: 'Encrypted first/given name'},
+    middle_name_enc: {bsonType: ['binData', 'null'],description: 'Encrypted middle name'},
+    last_name_enc: {bsonType: ['binData', 'null'],description: 'Encrypted surname/family name'},
     dob_enc: { bsonType: ['binData', 'null'] },
-    address_enc: { bsonType: ['binData', 'null'] },
+
+
+    address_enc: {bsonType: ['binData', 'null'],description: 'Encrypted original complete address'},
+    house_number_enc: {bsonType: ['binData', 'null'],description: 'Encrypted house/door/flat number'},
+    street_enc: {bsonType: ['binData', 'null'],description: 'Encrypted street/road information'},
+    locality_enc: {bsonType: ['binData', 'null'],description: 'Encrypted locality/neighborhood'},
+    city_enc: {bsonType: ['binData', 'null'],description: 'Encrypted city/town'},
+    state_enc: {bsonType: ['binData', 'null'],description: 'Encrypted state'},
+    pincode_enc: {bsonType: ['binData', 'null'],description: 'Encrypted postal PIN code'},
     phone_enc: { bsonType: ['binData', 'null'] },
     guardian_name_enc: { bsonType: ['binData', 'null'], description: "Father/Husband/Relative/Mother/Spouse name" },
     place_of_birth_enc: { bsonType: ['binData', 'null'] },
@@ -244,6 +257,8 @@ db.encryption_keys.createIndex({ status: 1 });
 
 // Deduplication Sparse Unique Indexes on Tokens
 db.patient_profiles.createIndex({ user_id: 1 }, { unique: true });
+db.patient_profiles.createIndex({phone_enc:1},{unique:true,sparse:true});
+db.patient_profiles.createIndex({email_enc:1},{unique:true,sparse:true});
 db.patient_profiles.createIndex({ aadhaar_token: 1 }, { unique: true, sparse: true });
 db.patient_profiles.createIndex({ pan_token: 1 }, { unique: true, sparse: true });
 db.patient_profiles.createIndex({ voter_id_token: 1 }, { unique: true, sparse: true });

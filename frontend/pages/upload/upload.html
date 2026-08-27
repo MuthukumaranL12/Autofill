@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedForm — Upload Document</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="upload.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" href="../dashboard/dashboard.html">
+            <span class="brand-mark">M</span>
+            <span>MedForm</span>
+        </a>
+
+        <nav class="nav">
+            <a href="../dashboard/dashboard.html">Dashboard</a>
+            <a class="active" href="upload.html">Documents</a>
+            <a href="../autofill/autofill.html">Forms</a>
+            <a href="../profile/profile.html">Profile</a>
+        </nav>
+
+        <div class="user-area">
+            <span>Welcome</span>
+            <button class="avatar" type="button">M</button>
+        </div>
+    </div>
+</header>
+
+<main class="page">
+
+    <section class="heading">
+        <p class="eyebrow">IDENTITY DOCUMENTS</p>
+        <h1>Upload a document</h1>
+        <p>
+            Upload an identity document. MedForm will extract
+            information and show it to you for review before
+            anything is saved to your profile.
+        </p>
+    </section>
+
+    <section class="card">
+
+        <div class="steps">
+            <div class="step active" id="stepUpload">
+                <span>1</span>
+                <strong>Upload</strong>
+            </div>
+            <div class="line"></div>
+
+            <div class="step" id="stepReview">
+                <span>2</span>
+                <strong>Review &amp; consent</strong>
+            </div>
+            <div class="line"></div>
+
+            <div class="step" id="stepSaved">
+                <span>3</span>
+                <strong>Saved</strong>
+            </div>
+        </div>
+
+        <!-- UPLOAD STATE -->
+        <section class="state upload-state" id="uploadState">
+
+            <div
+                class="upload-area"
+                id="uploadArea"
+                role="button"
+                tabindex="0"
+                aria-label="Upload identity document"
+            >
+                <input
+                    type="file"
+                    id="documentFile"
+                    name="documentFile"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    hidden
+                >
+
+                <div class="upload-icon" aria-hidden="true">↑</div>
+
+                <h2>Drop your document here</h2>
+                <p>or choose a file from your device</p>
+
+                <label
+                    for="documentFile"
+                    class="choose-document-button"
+                >
+                    Choose document
+                </label>
+
+                <small>PDF, JPG, JPEG or PNG · Maximum 10 MB</small>
+            </div>
+
+            <div
+                class="selected-file"
+                id="selectedFile"
+                hidden
+            >
+                <div class="file-icon" id="fileIcon">FILE</div>
+
+                <div class="file-details">
+                    <strong id="fileName"></strong>
+                    <span id="fileSize"></span>
+                </div>
+
+                <button
+                    id="removeButton"
+                    class="remove-button"
+                    type="button"
+                >
+                    Remove
+                </button>
+            </div>
+
+            <div class="privacy-note">
+                <span>✓</span>
+                <div>
+                    <strong>Consent before storage</strong>
+                    <p>
+                        Extraction happens first. Your extracted
+                        identity information is not saved to your
+                        profile until you explicitly consent.
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-error" id="uploadError"></div>
+
+            <button
+                id="extractButton"
+                class="primary-button"
+                type="button"
+                disabled
+            >
+                <span id="extractButtonText">Extract information</span>
+                <span id="extractSpinner" class="spinner" hidden></span>
+            </button>
+
+        </section>
+
+        <!-- PROCESSING STATE -->
+        <section
+            class="state processing-state"
+            id="processingState"
+            hidden
+        >
+            <div class="loader"></div>
+            <p class="eyebrow">PROCESSING</p>
+            <h2>Extracting information</h2>
+            <p>Please wait while MedForm reads your document.</p>
+            <small>Nothing is being added to your profile yet.</small>
+        </section>
+
+        <!-- SAVED STATE -->
+        <section
+            class="state saved-state"
+            id="savedState"
+            hidden
+        >
+            <div class="success-icon">✓</div>
+            <p class="eyebrow">SAVED</p>
+            <h2>Information saved</h2>
+            <p>
+                Your consent was recorded and the approved
+                information has been added to your profile.
+            </p>
+
+            <div class="saved-actions">
+                <a
+                    class="secondary-link"
+                    href="../profile/profile.html"
+                >
+                    View profile
+                </a>
+
+                <button
+                    class="primary-button"
+                    id="uploadAnotherButton"
+                    type="button"
+                >
+                    Upload another document
+                </button>
+            </div>
+        </section>
+
+    </section>
+</main>
+
+<!-- CONSENT MODAL -->
+<div
+    class="modal-backdrop"
+    id="consentModal"
+    hidden
+>
+    <section
+        class="consent-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="consentTitle"
+    >
+        <div class="consent-header">
+            <div class="consent-icon">!</div>
+            <div>
+                <p class="eyebrow">YOUR CONSENT</p>
+                <h2 id="consentTitle">Review before saving</h2>
+            </div>
+        </div>
+
+        <p class="consent-intro">
+            MedForm has extracted the following information from
+            your document. Please review it carefully.
+        </p>
+
+        <div class="consent-fields" id="consentFields"></div>
+
+        <div class="consent-warning">
+            <strong>Nothing has been saved yet.</strong>
+            <p>
+                Your information will only be added to your
+                identity profile if you explicitly choose
+                “I Consent &amp; Save”.
+            </p>
+        </div>
+
+        <label class="consent-check">
+            <input id="consentCheckbox" type="checkbox">
+            <span>
+                I have reviewed the extracted information and
+                consent to MedForm securely storing it in my
+                identity profile for future autofill.
+            </span>
+        </label>
+
+        <div class="consent-error" id="consentError"></div>
+
+        <div class="consent-actions">
+            <button
+                class="decline-button"
+                id="declineConsentButton"
+                type="button"
+            >
+                Decline &amp; discard
+            </button>
+
+            <button
+                class="consent-button"
+                id="acceptConsentButton"
+                type="button"
+                disabled
+            >
+                I Consent &amp; Save
+            </button>
+        </div>
+    </section>
+</div>
+
+<script src="../../js/api.js"></script>
+<script src="../../js/auth.js"></script>
+<script src="upload.js"></script>
+
+</body>
+</html>

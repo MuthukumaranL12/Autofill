@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>MedForm — Completed Form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="result.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="../../index.html"
+          ><span class="brand-mark">M</span><span>MedForm</span></a
+        >
+        <nav class="nav">
+          <a href="../dashboard/dashboard.html">Dashboard</a
+          ><a href="../documents/documents.html">Documents</a
+          ><a class="active" href="../autofill/autofill.html">Forms</a
+          ><a href="../profile/profile.html">Profile</a>
+        </nav>
+        <div class="user-area">
+          <span>Welcome, <strong>Muthu</strong></span
+          ><button class="avatar">M</button>
+        </div>
+      </div>
+    </header>
+    <main class="page">
+      <section class="success-head">
+        <div class="success-icon">✓</div>
+        <p class="eyebrow">AUTOFILL COMPLETE</p>
+        <h1>Your form is ready</h1>
+        <p>Review the completed document before submitting it.</p>
+      </section>
+      <section class="result-layout">
+        <div class="preview-card">
+          <div class="toolbar">
+            <strong>Completed form</strong
+            ><button id="previewButton">Open full preview</button>
+          </div>
+          <div class="preview">
+            <div class="paper">
+              <div class="paper-title">PATIENT REGISTRATION FORM</div>
+              <div class="field-lines">
+                <span>Full Name</span><b>Muthu Kumar</b
+                ><span>Date of Birth</span><b>14 May 2005</b><span>Address</span
+                ><b>86A AECS Colony 1st Main Road</b><span>City</span
+                ><b>Bangalore</b><span>PIN Code</span><b>560089</b>
+              </div>
+              <div class="filled-stamp">FILLED</div>
+            </div>
+          </div>
+        </div>
+        <aside class="side">
+          <div class="stat">
+            <span>FIELDS FILLED</span><strong>18</strong
+            ><small>Information matched from profile</small>
+          </div>
+          <div class="stat">
+            <span>REVIEW REQUIRED</span><strong>2</strong
+            ><small>Fields need your attention</small>
+          </div>
+          <div class="review">
+            <div class="review-title">
+              <strong>Before you submit</strong><span>!</span>
+            </div>
+            <p>
+              Check the highlighted information and make sure all details are
+              correct.
+            </p>
+            <button id="reviewButton">Review fields →</button>
+          </div>
+          <button class="download" id="downloadButton">
+            Download completed form <span>↓</span></button
+          ><button class="again" id="againButton">Fill another form</button>
+        </aside>
+      </section>
+    </main>
+    <footer>
+      <span>MedForm</span><span>Secure identity • Consent-based autofill</span>
+    </footer>
+    <div class="toast" id="toast"></div>
+    <script src="result.js"></script>
+  </body>
+</html>

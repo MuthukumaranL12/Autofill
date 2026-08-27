@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedForm — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#" aria-label="MedForm home">
+        <span class="brand-mark">M</span>
+        <span>MedForm</span>
+      </a>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a class="nav-link active" href="#dashboard">Dashboard</a>
+        <a class="nav-link" href="#documents">Documents</a>
+        <a class="nav-link" href="#forms">Forms</a>
+        <a class="nav-link" href="#profile">Profile</a>
+        <button class="nav-link logout" id="logoutBtn" type="button">Logout</button>
+      </nav>
+
+      <div class="user-area">
+        <span class="welcome">Welcome, <strong>Muthu</strong></span>
+        <button class="avatar" type="button" aria-label="Open profile">M</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="dashboard" class="page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">PERSONAL HEALTH DOCUMENTS</p>
+        <h1>Welcome back, Muthu</h1>
+        <p class="hero-text">Complete your medical forms faster with your saved information.</p>
+      </div>
+      <div class="hero-badge" aria-hidden="true">
+        <span>✦</span>
+      </div>
+    </section>
+
+    <section class="quick-actions" aria-label="Quick actions">
+      <article class="action-card">
+        <div class="action-icon upload-icon">↑</div>
+        <div class="action-content">
+          <h2>Upload Document</h2>
+          <p>Add Aadhaar, PAN, Voter ID or another identity document.</p>
+          <button class="action-button" type="button" data-action="upload">Upload document <span>→</span></button>
+        </div>
+      </article>
+
+      <article class="action-card primary-card">
+        <div class="action-icon form-icon">✎</div>
+        <div class="action-content">
+          <h2>Fill a Form</h2>
+          <p>Use your saved identity information to fill a medical form.</p>
+          <button class="action-button primary-button" type="button" data-action="fill">Fill a form <span>→</span></button>
+        </div>
+      </article>
+    </section>
+
+    <section class="stats" aria-label="Dashboard statistics">
+      <div class="stat-card">
+        <span class="stat-label">DOCUMENTS UPLOADED</span>
+        <strong class="stat-value">4</strong>
+        <span class="stat-note">Identity documents</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">FORMS COMPLETED</span>
+        <strong class="stat-value">2</strong>
+        <span class="stat-note">Successfully autofilled</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">PROFILE STATUS</span>
+        <strong class="stat-value status">Ready</strong>
+        <span class="stat-note"><span class="status-dot"></span> Information available</span>
+      </div>
+    </section>
+
+    <section id="documents" class="recent-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">RECENT ACTIVITY</p>
+          <h2>Your documents</h2>
+        </div>
+        <button class="text-button" type="button" data-action="documents">View all <span>→</span></button>
+      </div>
+
+      <div class="document-list">
+        <article class="document-row">
+          <div class="doc-icon">ID</div>
+          <div class="doc-info">
+            <strong>Aadhaar Card</strong>
+            <span>Uploaded recently</span>
+          </div>
+          <span class="verified">Verified</span>
+        </article>
+
+        <article class="document-row">
+          <div class="doc-icon">ID</div>
+          <div class="doc-info">
+            <strong>PAN Card</strong>
+            <span>Uploaded recently</span>
+          </div>
+          <span class="verified">Verified</span>
+        </article>
+
+        <article class="document-row">
+          <div class="doc-icon">ID</div>
+          <div class="doc-info">
+            <strong>Voter ID</strong>
+            <span>Uploaded earlier</span>
+          </div>
+          <span class="verified">Verified</span>
+        </article>
+      </div>
+    </section>
+
+    <section id="forms" class="info-banner">
+      <div class="banner-icon">✓</div>
+      <div>
+        <strong>Ready to autofill?</strong>
+        <p>Upload a medical form and let MedForm populate it using your consented profile information.</p>
+      </div>
+      <button class="banner-button" type="button" data-action="fill">Start autofill</button>
+    </section>
+  </main>
+
+  <footer>
+    <span>MedForm</span>
+    <span>Secure identity • Consent-based autofill</span>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

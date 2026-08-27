@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MedForm — Login</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+<main class="auth-page">
+
+    <section class="auth-card">
+
+        <a class="brand" href="../../index.html">
+            <span class="brand-mark">M</span>
+            <span>MedForm</span>
+        </a>
+
+        <div class="heading">
+            <p class="eyebrow">WELCOME BACK</p>
+
+            <h1>Sign in to MedForm</h1>
+
+            <p>
+                Access your saved identity information and continue
+                with secure form autofill.
+            </p>
+        </div>
+
+        <form id="loginForm" novalidate>
+
+            <div class="field">
+                <label for="phone">Phone number</label>
+
+                <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    autocomplete="tel"
+                    placeholder="Enter your phone number"
+                    required
+                >
+
+                <small class="field-error" id="phoneError"></small>
+            </div>
+
+            <div class="field">
+                <div class="label-row">
+                    <label for="password">Password</label>
+                </div>
+
+                <div class="password-wrap">
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        autocomplete="current-password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                    <button
+                        class="show-password"
+                        id="showPassword"
+                        type="button"
+                        aria-label="Show password"
+                    >
+                        Show
+                    </button>
+                </div>
+
+                <small class="field-error" id="passwordError"></small>
+            </div>
+
+            <div
+                class="form-error"
+                id="formError"
+                role="alert"
+                aria-live="polite"
+            ></div>
+
+            <button
+                class="primary-button"
+                id="loginButton"
+                type="submit"
+            >
+                <span id="loginButtonText">Sign in</span>
+                <span id="loginSpinner" class="spinner" hidden></span>
+            </button>
+
+        </form>
+
+        <div class="divider">
+            <span>New to MedForm?</span>
+        </div>
+
+        <a class="secondary-button" href="../register/register.html">
+            Create an account
+        </a>
+
+        <p class="privacy-note">
+            Your information is protected and used only for
+            consent-based autofill.
+        </p>
+
+    </section>
+
+</main>
+
+<script src="../../js/api.js"></script>
+<script src="../../js/auth.js"></script>
+<script src="login.js"></script>
+
+</body>
+</html>

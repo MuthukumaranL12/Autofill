@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MedForm — Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+
+        <a class="brand" href="dashboard.html">
+            <span class="brand-mark">M</span>
+            <span>MedForm</span>
+        </a>
+
+        <nav class="nav">
+            <a class="active" href="dashboard.html">Dashboard</a>
+            <a href="../documents/documents.html">Documents</a>
+            <a href="../autofill/autofill.html">Forms</a>
+            <a href="../profile/profile.html">Profile</a>
+        </nav>
+
+        <div class="user-area">
+            <span id="welcomeUser">Welcome</span>
+
+            <button
+                class="avatar"
+                id="avatarButton"
+                type="button"
+            >
+                M
+            </button>
+
+            <div
+                class="user-menu"
+                id="userMenu"
+                hidden
+            >
+                <a href="../profile/profile.html">
+                    Profile
+                </a>
+
+                <button id="logoutButton" type="button">
+                    Sign out
+                </button>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<main class="page">
+
+    <section class="hero">
+
+        <div>
+            <p class="eyebrow">PERSONAL DASHBOARD</p>
+
+            <h1 id="greeting">
+                Welcome back
+            </h1>
+
+            <p>
+                Manage your identity information and securely
+                autofill structured forms using your saved data.
+            </p>
+        </div>
+
+        <div class="hero-status">
+            <span class="status-dot"></span>
+            <span>Account active</span>
+        </div>
+
+    </section>
+
+    <section class="quick-actions">
+
+        <a
+            class="action-card primary-action"
+            href="../upload/upload.html"
+        >
+            <div class="action-icon">↑</div>
+
+            <div>
+                <h2>Upload document</h2>
+                <p>
+                    Add an identity document and extract
+                    your information.
+                </p>
+            </div>
+
+            <span class="arrow">→</span>
+        </a>
+
+        <a
+            class="action-card"
+            href="../autofill/autofill.html"
+        >
+            <div class="action-icon">□</div>
+
+            <div>
+                <h2>Autofill a form</h2>
+                <p>
+                    Upload a form and fill it using your
+                    saved profile.
+                </p>
+            </div>
+
+            <span class="arrow">→</span>
+        </a>
+
+    </section>
+
+    <section class="content-grid">
+
+        <div class="main-column">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">IDENTITY PROFILE</p>
+                    <h2>Your information</h2>
+                </div>
+
+                <a href="../profile/profile.html">
+                    View profile →
+                </a>
+            </div>
+
+            <section class="profile-card">
+
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profileAvatar">
+                        M
+                    </div>
+
+                    <div>
+                        <h3 id="profileName">
+                            Identity profile
+                        </h3>
+
+                        <p>
+                            Information available for
+                            consent-based autofill
+                        </p>
+                    </div>
+                </div>
+
+                <div class="profile-fields">
+
+                    <div class="profile-field">
+                        <span>Phone</span>
+                        <strong id="profilePhone">
+                            —
+                        </strong>
+                    </div>
+
+                    <div class="profile-field">
+                        <span>Email</span>
+                        <strong id="profileEmail">
+                            —
+                        </strong>
+                    </div>
+
+                    <div class="profile-field">
+                        <span>Date of birth</span>
+                        <strong id="profileDob">
+                            —
+                        </strong>
+                    </div>
+
+                    <div class="profile-field">
+                        <span>Address</span>
+                        <strong id="profileAddress">
+                            —
+                        </strong>
+                    </div>
+
+                </div>
+
+                <div class="profile-footer">
+                    <span>
+                        Profile data is used only when
+                        you initiate autofill.
+                    </span>
+
+                    <a href="../profile/profile.html">
+                        Edit information
+                    </a>
+                </div>
+
+            </section>
+
+        </div>
+
+        <aside class="side-column">
+
+            <div class="section-heading compact">
+                <div>
+                    <p class="eyebrow">OVERVIEW</p>
+                    <h2>Activity</h2>
+                </div>
+            </div>
+
+            <section class="stats-card">
+
+                <div class="stat">
+                    <div class="stat-icon">ID</div>
+
+                    <div>
+                        <span>Documents</span>
+                        <strong id="documentCount">—</strong>
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-icon">✓</div>
+
+                    <div>
+                        <span>Profile fields</span>
+                        <strong id="profileFieldCount">—</strong>
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-icon">□</div>
+
+                    <div>
+                        <span>Forms filled</span>
+                        <strong id="formsFilledCount">0</strong>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="security-card">
+
+                <div class="security-icon">✓</div>
+
+                <div>
+                    <p class="eyebrow">SECURITY</p>
+
+                    <h3>
+                        Your data is protected
+                    </h3>
+
+                    <p>
+                        Autofill only happens when you
+                        explicitly start the process.
+                    </p>
+                </div>
+
+            </section>
+
+        </aside>
+
+    </section>
+
+</main>
+
+<footer>
+    <span>MedForm</span>
+    <span>Secure identity • Consent-based autofill</span>
+</footer>
+
+<script src="../../js/api.js"></script>
+<script src="../../js/auth.js"></script>
+<script src="dashboard.js"></script>
+
+</body>
+</html>

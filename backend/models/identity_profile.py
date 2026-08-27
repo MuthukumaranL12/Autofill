@@ -4,22 +4,27 @@ from typing import Optional
 
 class IdentityProfile(BaseModel):
 
-    name: Optional[str] = ""
+    name: str|None=None
+    first_name: str|None=None
+    middle_name: str|None=None
+    last_name: str|None=None
 
-    dob: Optional[str] = ""
+    dob: str|None=None
 
-    address: Optional[str] = ""
+    address: str|None=None
+    house_number: str|None=None
+    street: str|None=None
+    locality: str|None=None
+    city: str|None=None
+    state: str|None=None
+    pincode: str|None=None
 
-    guardian_name: Optional[str] = ""
+    guardian_name: str|None=None
+    place_of_birth: str|None=None
 
-    place_of_birth: Optional[str] = ""
+    gender: str|None=None
+    year_of_birth: str|None=None
 
-    gender: Optional[str] = ""
-
-    year_of_birth: Optional[str] = ""
-
-    aadhaar_number: Optional[str] = ""
-
-    voter_id: Optional[str] = ""
-
-    birth_registration_number: Optional[str] = ""
+    aadhaar_number: str|None=None
+    voter_id: str|None=None
+    birth_registration_number: str|None=None

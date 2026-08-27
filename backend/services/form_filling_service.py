@@ -4,7 +4,7 @@ from PIL import Image
 
 from backend.models.identity_profile import IdentityProfile
 from backend.repositories.profile_repository import ProfileRepository
-from backend.security.decryption import decrypt_field
+# from backend.security.decryption import decrypt_field
 
 from backend.form_pipeline.textract_service import TextractClient
 from backend.form_pipeline.field_extractor import FieldExtractor
@@ -105,42 +105,81 @@ class FormFillingService:
 
     def _build_identity_profile(self, profile):
 
-        return IdentityProfile(
-            name=decrypt_field(
-                profile.get("name_enc")
+        identity_profile = IdentityProfile(
+
+            name=profile.get("name", ""),
+
+            first_name=profile.get(
+                "first_name", ""
             ),
 
-            dob=decrypt_field(
-                profile.get("dob_enc")
+            middle_name=profile.get(
+                "middle_name", ""
             ),
 
-            address=decrypt_field(
-                profile.get("address_enc")
+            last_name=profile.get(
+                "last_name", ""
             ),
 
-            guardian_name=decrypt_field(
-                profile.get("guardian_name_enc")
+            dob=profile.get(
+                "dob", ""
             ),
 
-            place_of_birth=decrypt_field(
-                profile.get("place_of_birth_enc")
+            address=profile.get(
+                "address", ""
             ),
 
-            gender=profile.get("gender") or "",
+            house_number=profile.get(
+                "house_number", ""
+            ),
+
+            street=profile.get(
+                "street", ""
+            ),
+
+            locality=profile.get(
+                "locality", ""
+            ),
+
+            city=profile.get(
+                "city", ""
+            ),
+
+            state=profile.get(
+                "state", ""
+            ),
+
+            pincode=profile.get(
+                "pincode", ""
+            ),
+
+            guardian_name=profile.get(
+                "guardian_name", ""
+            ),
+
+            place_of_birth=profile.get(
+                "place_of_birth", ""
+            ),
+
+            gender=profile.get(
+                "gender", ""
+            ),
 
             year_of_birth=profile.get(
-                "year_of_birth"
+                "year_of_birth", ""
             ),
 
             aadhaar_number=profile.get(
-                "aadhaar_token"
+                "aadhaar_number", ""
             ),
 
             voter_id=profile.get(
-                "voter_id_token"
+                "voter_id", ""
             ),
 
             birth_registration_number=profile.get(
-                "birth_reg_token"
-            )
+                "birth_registration_number", ""
+            ),
         )
+
+        return identity_profile
