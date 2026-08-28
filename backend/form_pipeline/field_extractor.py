@@ -368,6 +368,191 @@ class FieldExtractor:
             return []
 
         return cells
-    
+
+
+    def get_selection_elements(self) -> list[dict[str, Any]]:
+        """
+        Return all checkbox/radio selection elements detected by Textract.
+        """
+        selection_elements = []
+
+        for block in self.blocks:
+            if block.get("BlockType") != "SELECTION_ELEMENT":
+                continue
+
+            bbox = self._get_bbox(block)
+
+            if bbox is None:
+                continue
+
+            selection_elements.append({
+                "id": block.get("Id"),
+                "status": block.get("SelectionStatus"),
+                "bbox": bbox
+            })
+
+        return selection_elements
+
+    def get_checkbox_options(
+        self,
+        selection_elements: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
+        """
+        Associate each Textract checkbox with the nearest WORD.
+
+        The label may appear either:
+            Male [checkbox]
+        or:
+            [checkbox] Male
+
+        Therefore both left and right sides are checked.
+        """
+
+        options = []
+
+        # Collect all WORD blocks
+        word_blocks = []
+
+        for block in self.blocks:
+
+            if block.get("BlockType") != "WORD":
+                continue
+
+            bbox = self._get_bbox(block)
+
+            if bbox is None:
+                continue
+
+            word_blocks.append({
+                "text": block.get("Text", ""),
+                "bbox": bbox
+            })
+
+        for checkbox in selection_elements:
+
+            checkbox_bbox = checkbox["bbox"]
+
+            checkbox_left = checkbox_bbox["left"]
+            checkbox_right = (
+                checkbox_left
+                + checkbox_bbox["width"]
+            )
+
+            checkbox_center_y = (
+                checkbox_bbox["top"]
+                + checkbox_bbox["height"] / 2
+            )
+
+            candidates = []
+
+            for word in word_blocks:
+
+                word_bbox = word["bbox"]
+
+                word_left = word_bbox["left"]
+                word_right = (
+                    word_left
+                    + word_bbox["width"]
+                )
+
+                word_center_y = (
+                    word_bbox["top"]
+                    + word_bbox["height"] / 2
+                )
+
+                # ---------------------------------
+                # Vertical alignment
+                # ---------------------------------
+
+                vertical_distance = abs(
+                    word_center_y
+                    - checkbox_center_y
+                )
+
+                max_vertical_distance = max(
+                    checkbox_bbox["height"] * 2,
+                    word_bbox["height"] * 1.5
+                )
+
+                if vertical_distance > max_vertical_distance:
+                    continue
+
+                # ---------------------------------
+                # Word is LEFT of checkbox
+                # Example:
+                #
+                # Male [□]
+                # ---------------------------------
+
+                if word_right <= checkbox_left:
+
+                    horizontal_distance = (
+                        checkbox_left
+                        - word_right
+                    )
+
+                    if horizontal_distance <= 0.08:
+
+                        distance = (
+                            horizontal_distance
+                            + vertical_distance
+                        )
+
+                        candidates.append(
+                            (
+                                distance,
+                                "left",
+                                word
+                            )
+                        )
+
+                # ---------------------------------
+                # Word is RIGHT of checkbox
+                # Example:
+                #
+                # [□] Male
+                # ---------------------------------
+
+                elif word_left >= checkbox_right:
+
+                    horizontal_distance = (
+                        word_left
+                        - checkbox_right
+                    )
+
+                    if horizontal_distance <= 0.08:
+
+                        distance = (
+                            horizontal_distance
+                            + vertical_distance
+                        )
+
+                        candidates.append(
+                            (
+                                distance,
+                                "right",
+                                word
+                            )
+                        )
+
+            if not candidates:
+                continue
+
+            # ---------------------------------
+            # Select closest word
+            # ---------------------------------
+
+            candidates.sort(
+                key=lambda item: item[0]
+            )
+
+            nearest_word = candidates[0][2]
+
+            options.append({
+                "checkbox": checkbox,
+                "label": nearest_word["text"].strip()
+            })
+
+        return options
 
 

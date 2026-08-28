@@ -46,6 +46,53 @@ class FormFillingService:
 
         detected_fields = field_extractor.extract()
 
+       
+        # ---------------------------------------
+        # Detect checkbox / selection elements
+        # ---------------------------------------
+
+        selection_elements = (
+            field_extractor.get_selection_elements()
+        )
+
+        checkbox_options = (
+            field_extractor.get_checkbox_options(
+                selection_elements
+            )
+        )
+
+        # ---------------------------------------
+        # Remove checkbox labels from normal
+        # semantic field matching
+        # ---------------------------------------
+
+        checkbox_labels = {
+            option["label"].strip().lower()
+            for option in checkbox_options
+            if option.get("label")
+        }
+
+        detected_fields = [
+            field
+            for field in detected_fields
+            if field.label.strip().lower()
+            not in checkbox_labels
+        ]
+
+        print("\n========== CHECKBOX OPTIONS ==========")
+
+        for option in checkbox_options:
+            print(
+                "Checkbox:",
+                option["checkbox"]["status"],
+                "| Label:",
+                option["label"],
+                "| BBox:",
+                option["checkbox"]["bbox"]
+            )
+
+        print("======================================\n")
+
         # 5. Existing semantic matching
         matched_fields = self.semantic_matcher.match(
             detected_fields
@@ -98,7 +145,8 @@ class FormFillingService:
             image=image,
             textract_result=textract_result,
             matched_fields=matched_fields,
-            identity_profile=identity_profile
+            identity_profile=identity_profile,
+            checkbox_options=checkbox_options
         )
 
         return output_path

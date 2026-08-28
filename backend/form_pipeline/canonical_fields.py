@@ -3,6 +3,10 @@ CANONOICAL_FIELDS={
     "name":[
         "name",
         "full_name",
+        "name (capital letter)",
+        "name capital letter",
+        "applicant name",
+        "applicant's name",
     ],
     "first_name":[
 
@@ -43,6 +47,7 @@ CANONOICAL_FIELDS={
         "mobile no",
         "phone no",
         "contact number",
+        "applicant's phone number"
     
     ],
 
@@ -85,6 +90,7 @@ CANONOICAL_FIELDS={
         "location",
         "permanent address",
         "current address",
+        "Present address"
     ],
     "house_flat": [
         "house number",

@@ -21,6 +21,12 @@ class TextractClient:
             Document={"Bytes": image_bytes},
             FeatureTypes=["FORMS", "TABLES"]
         )
+        for block in response.get("Blocks", []):
+            if block.get("BlockType") == "SELECTION_ELEMENT":
+                print("\n========== CHECKBOX ==========")
+                print("Status:", block.get("SelectionStatus"))
+                print("Geometry:", block.get("Geometry"))
+                print("==============================")
         return response
 
     async def extract(self, uploaded_file) -> dict[str, Any]:

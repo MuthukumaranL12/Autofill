@@ -65,47 +65,124 @@ class AutoFill:
             # Fallback for environments without Arial.
             return ImageFont.load_default()
 
+    # def _draw_text(self, image: Any, value: str, bbox: dict[str, int]) -> None:
+    #     if not value:
+    #         return
+
+    #     draw = ImageDraw.Draw(image)
+
+    #     field_height = bbox["height"]
+    #     if field_height >= 30:
+    #         font_size = 20
+    #     elif field_height >= 20:
+    #         font_size = 17
+    #     else:
+    #         font_size = 15
+
+    #     font = self._load_font(font_size)
+    #     text_bbox = draw.textbbox((0, 0), value, font=font)
+    #     text_height = text_bbox[3] - text_bbox[1]
+
+    #     x = bbox["left"]
+    #     y = bbox["top"] + (bbox["height"] - text_height) / 2
+
+    #     draw.text((x, y), value, font=font, fill="black")
+
+    # def _draw_text_in_cells(self, image: Any, value: str, cells: list[Any]) -> None:
+    #     if not value:
+    #         return
+
+    #     draw = ImageDraw.Draw(image)
+    #     font = self._load_font(20)
+
+    #     for char, cell in zip(str(value), cells):
+    #         bbox = self.bbox_to_pixels(cell.bbox, image.width, image.height)
+
+    #         char_bbox = draw.textbbox((0, 0), char, font=font)
+    #         char_width = char_bbox[2] - char_bbox[0]
+    #         char_height = char_bbox[3] - char_bbox[1]
+
+    #         x = bbox["left"] + (bbox["width"] - char_width) / 2
+    #         y = bbox["top"] + (bbox["height"] - char_height) / 2
+
+    #         draw.text((x, y), char, font=font, fill="black")
+
     def _draw_text(self, image: Any, value: str, bbox: dict[str, int]) -> None:
         if not value:
             return
 
         draw = ImageDraw.Draw(image)
 
+        # Field dimensions
+        field_width = bbox["width"]
         field_height = bbox["height"]
-        if field_height >= 30:
-            font_size = 20
-        elif field_height >= 20:
-            font_size = 17
-        else:
-            font_size = 15
 
-        font = self._load_font(font_size)
-        text_bbox = draw.textbbox((0, 0), value, font=font)
-        text_height = text_bbox[3] - text_bbox[1]
+        # Font size limits
+        max_font_size = 20
+        min_font_size = 7
 
-        x = bbox["left"]
-        y = bbox["top"] + (bbox["height"] - text_height) / 2
+        # Padding so text doesn't touch the field boundaries
+        horizontal_padding = 4
+        vertical_padding = 2
 
-        draw.text((x, y), value, font=font, fill="black")
+        available_width = field_width - (horizontal_padding * 2)
+        available_height = field_height - (vertical_padding * 2)
 
-    def _draw_text_in_cells(self, image: Any, value: str, cells: list[Any]) -> None:
-        if not value:
-            return
+        # Start with the largest font
+        font_size = max_font_size
 
-        draw = ImageDraw.Draw(image)
-        font = self._load_font(20)
+        # Reduce font size until the complete value fits
+        while font_size >= min_font_size:
 
-        for char, cell in zip(str(value), cells):
-            bbox = self.bbox_to_pixels(cell.bbox, image.width, image.height)
+            font = self._load_font(font_size)
 
-            char_bbox = draw.textbbox((0, 0), char, font=font)
-            char_width = char_bbox[2] - char_bbox[0]
-            char_height = char_bbox[3] - char_bbox[1]
+            text_bbox = draw.textbbox(
+                (0, 0),
+                value,
+                font=font
+            )
 
-            x = bbox["left"] + (bbox["width"] - char_width) / 2
-            y = bbox["top"] + (bbox["height"] - char_height) / 2
+            text_width = text_bbox[2] - text_bbox[0]
+            text_height = text_bbox[3] - text_bbox[1]
 
-            draw.text((x, y), char, font=font, fill="black")
+            if (
+                text_width <= available_width
+                and text_height <= available_height
+            ):
+                break
+
+            font_size -= 1
+
+        # If even the minimum font does not fit,
+        # use the minimum readable size.
+        if font_size < min_font_size:
+            font_size = min_font_size
+            font = self._load_font(font_size)
+
+            text_bbox = draw.textbbox(
+                (0, 0),
+                value,
+                font=font
+            )
+
+            text_width = text_bbox[2] - text_bbox[0]
+            text_height = text_bbox[3] - text_bbox[1]
+
+        # Center text vertically inside the field
+        x = bbox["left"] + horizontal_padding
+
+        y = (
+            bbox["top"]
+            + (field_height - text_height) / 2
+            - text_bbox[1]
+        )
+
+        draw.text(
+            (x, y),
+            value,
+            font=font,
+            fill="black"
+        )
 
     def fill_field(self, image: Any, matched_field: MatchField, cells: list[Any] | None = None) -> None:
         value = self.resolve_value(matched_field)
@@ -149,6 +226,7 @@ class AutoFill:
         textract_result,
         matched_fields,
         identity_profile,
+        checkbox_options=None
     ):
         self.set_profile(identity_profile)
 
@@ -174,6 +252,11 @@ class AutoFill:
             image,
             matched_fields
         )
+        if checkbox_options:
+            self.fill_checkboxes(
+                filled_image,
+                checkbox_options
+            )
 
         from pathlib import Path
         from uuid import uuid4
@@ -189,3 +272,110 @@ class AutoFill:
         filled_image.save(output_path)
 
         return str(output_path)
+
+    def _draw_checkbox(
+        self,
+        image: Any,
+        checkbox_bbox: dict[str, int]
+    ) -> None:
+
+        draw = ImageDraw.Draw(image)
+
+        left = checkbox_bbox["left"]
+        top = checkbox_bbox["top"]
+        width = checkbox_bbox["width"]
+        height = checkbox_bbox["height"]
+
+        # Draw a check mark using two lines.
+        # This avoids depending on a font containing the ✓ character.
+
+        x1 = left + width * 0.20
+        y1 = top + height * 0.52
+
+        x2 = left + width * 0.43
+        y2 = top + height * 0.75
+
+        x3 = left + width * 0.80
+        y3 = top + height * 0.25
+
+        line_width = max(
+            2,
+            int(min(width, height) * 0.12)
+        )
+
+        draw.line(
+            [(x1, y1), (x2, y2), (x3, y3)],
+            fill="black",
+            width=line_width
+        )
+
+
+    def _normalize_option(self, value: str) -> str:
+        if not value:
+            return ""
+
+        value = value.lower().strip()
+
+        # Remove common punctuation
+        value = value.replace(":", "")
+        value = value.replace(".", "")
+        value = value.replace("-", " ")
+
+        # Normalize spaces
+        value = " ".join(value.split())
+
+        return value
+
+    def _should_select_checkbox(
+        self,
+        label: str,
+        checkbox_options: dict[str, Any]
+    ) -> bool:
+
+        if not label:
+            return False
+
+        label_normalized = self._normalize_option(label)
+
+        # Gender
+        if self.profile and self.profile.gender:
+
+            profile_gender = self._normalize_option(
+                self.profile.gender
+            )
+
+            if label_normalized == profile_gender:
+                return True
+
+        return False
+
+    def fill_checkboxes(
+        self,
+        image: Any,
+        checkbox_options: list[dict[str, Any]]
+    ) -> None:
+
+        for option in checkbox_options:
+
+            label = option.get("label", "")
+            checkbox = option.get("checkbox")
+
+            if not checkbox:
+                continue
+
+            if not self._should_select_checkbox(
+                label,
+                checkbox
+            ):
+                continue
+
+            pixel_bbox = self.bbox_to_pixels(
+                checkbox["bbox"],
+                image.width,
+                image.height
+            )
+
+            self._draw_checkbox(
+                image,
+                pixel_bbox
+            )
